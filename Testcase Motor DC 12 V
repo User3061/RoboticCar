@@ -1,0 +1,39 @@
+//Motor 1
+const int motorPin1 = 9;
+const int motorPin2 = 8;
+
+//Motor 2
+const int motorPin3 = 7;
+const int motorPin4 = 6;
+int speed = 180;
+
+void setup(){
+ 
+  //Set pins as outputspinMode(motorPin1, OUTPUT);
+  pinMode(motorPin2, OUTPUT);
+  pinMode(motorPin3, OUTPUT);
+  pinMode(motorPin4, OUTPUT);
+  //Motor Control A in both directions
+
+ 
+}
+void loop(){
+
+   analogWrite(motorPin1, speed);
+
+  delay(2000);
+  analogWrite(motorPin1, 0);
+  delay(200);
+  analogWrite(motorPin2, speed);
+  delay(2000);
+  analogWrite(motorPin2, 0);
+  
+  //Motor Control B in both directions
+  analogWrite(motorPin3, speed);
+  delay(2000);
+  analogWrite(motorPin3, 0);
+  delay(200);
+  analogWrite(motorPin4, speed);
+  delay(2000);
+  analogWrite(motorPin4, 0);
+  }
