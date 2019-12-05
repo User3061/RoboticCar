@@ -2,13 +2,14 @@ int right_sens = 2;
 int left_sens = 3;
 
 //Motor 1 the right one
-const int motorPin1 = 9; //backwards
-const int motorPin2 = 8; //forwards
+const int motorPin1 = 8; //backwards
+const int motorPin2 = 9; //forwards
+int speedr = 191;
 
 //Motor 2 the left one
 const int motorPin3 = 7; //backwards
 const int motorPin4 = 6; //forwards
-int speed = 255;
+int speedl = 191;
 
 void setup(){
 
@@ -30,33 +31,33 @@ void loop(){
   
   if((digitalRead(right_sens) == LOW)&&(digitalRead(left_sens) == LOW)){
     
-    analogWrite(motorPin2, speed);
-    analogWrite(motorPin4, speed);
-    Serial.println("am working, yay");
+    analogWrite(motorPin2, speedr);
+    analogWrite(motorPin4, speedl);
+    //Serial.println("am working, yay");
     delay(500);
   }
 
   if((digitalRead(right_sens) == HIGH)&&(digitalRead(left_sens) == HIGH)){
-
     analogWrite(motorPin2, 0);
     analogWrite(motorPin4, 0);
-    Serial.println("Stuffs broken, abort");
+    //Serial.println("Stuffs broken, abort");
     delay(500);
   }
 }
 
 void right_turn(){
 
-  analogWrite(motorPin2, 0);
-  analogWrite(motorPin4, speed);
-  Serial.println("turning right");
+
+  analogWrite(motorPin2, 64);
+  analogWrite(motorPin4, 255);
+  //Serial.println("turning right");
   
   }
 
 void left_turn(){
 
-  analogWrite(motorPin2, speed);
-  analogWrite(motorPin4, 0);
-  Serial.println("turning left");
+  analogWrite(motorPin2, 255);
+  analogWrite(motorPin4, 64);
+  //Serial.println("turning left");
   
   }
