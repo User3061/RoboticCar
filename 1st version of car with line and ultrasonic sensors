@@ -1,0 +1,127 @@
+//Line Sensors
+const int right_sens = 2;
+const int left_sens = 3;
+
+//Motor 1 the right one
+const int motorPin1 = 8; //backwards
+const int motorPin2 = 9; //forwards
+int speedr = 191;
+
+//Motor 2 the left one
+const int motorPin3 = 7; //backwards
+const int motorPin4 = 6; //forwards
+int speedl = 191;
+
+//Ultrasonic Sensors
+const int trigPinC = 13;
+const int echoPinC = 12;
+long durationC;
+int distanceC;
+const int trigPinR = 5;
+const int echoPinR = 4;
+long durationR;
+int distanceR;
+
+void setup(){
+
+  Serial.begin(9600);
+  pinMode(right_sens, INPUT);
+  pinMode(left_sens, INPUT);
+  attachInterrupt(digitalPinToInterrupt(right_sens), right_turn, RISING);
+  attachInterrupt(digitalPinToInterrupt(left_sens), left_turn, RISING);
+  
+  pinMode(motorPin1, OUTPUT);
+  pinMode(motorPin2, OUTPUT);
+  pinMode(motorPin3, OUTPUT);
+  pinMode(motorPin4, OUTPUT);
+
+  pinMode(trigPinC, OUTPUT);
+  pinMode(echoPinC, INPUT);
+  pinMode(trigPinR, OUTPUT);
+  pinMode(echoPinR, INPUT);
+}
+
+
+void loop(){
+  
+  USC_Sensor();
+  USR_Sensor();
+  
+  if((digitalRead(right_sens) == LOW)&&(digitalRead(left_sens) == LOW)){
+
+    analogWrite(motorPin2, speedr);
+    analogWrite(motorPin4, speedl);
+    //Serial.println("am working, yay");
+    //delay(500);
+  }
+
+  if((digitalRead(right_sens) == HIGH)&&(digitalRead(left_sens) == HIGH)){
+    
+    analogWrite(motorPin2, 0);
+    analogWrite(motorPin4, 0);
+    //Serial.println("Stuffs broken, abort");
+    //delay(500);
+  }
+  else if((distanceC <= 50) || (distanceR <= 50)){
+    
+    analogWrite(motorPin2, 0);
+    analogWrite(motorPin4, 0);
+    //Serial.println("Stuffs broken, abort");
+    //delay(500);
+  }
+
+}
+
+void right_turn(){
+
+  analogWrite(motorPin2, 64);
+  analogWrite(motorPin4, 255);
+  //Serial.println("turning right");
+}
+
+void left_turn(){
+
+  analogWrite(motorPin2, 255);
+  analogWrite(motorPin4, 64);
+  //Serial.println("turning left");
+}
+
+void USC_Sensor(){
+  
+  // Clears the trigPin
+  digitalWrite(trigPinC, LOW);
+  delayMicroseconds(2);
+  
+  // Sets the trigPin on HIGH state for 10 micro seconds
+  digitalWrite(trigPinC, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPinC, LOW);
+  
+  // Reads the echoPin, returns the sound wave travel time in microseconds
+  durationC = pulseIn(echoPinC, HIGH);
+  
+  // Calculating the distance
+  distanceC = durationC*0.034/2;
+  
+  // Prints the distance on the Serial Monitor
+  Serial.print("DistanceC: ");
+  Serial.println(distanceC);
+}
+
+void USR_Sensor(){
+
+  digitalWrite(trigPinR, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(trigPinR, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPinR, LOW);
+
+  durationR = pulseIn(echoPinR, HIGH);
+
+  distanceR = durationR*0.034/2;
+  
+  Serial.print("DistanceR: ");
+  Serial.println(distanceR);
+  
+}
