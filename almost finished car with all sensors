@@ -1,8 +1,8 @@
 //Line Sensors
 const int right_sens = 2;
 const int left_sens = 3;
-volatile byte right_sens_override = 0;
-volatile byte left_sens_override = 0;
+int right_sens_override = 0;
+int left_sens_override = 0;
 
 //Motor 1 the right one
 const int motorPin1 = 8; //backwards
@@ -31,8 +31,6 @@ void setup(){
   Serial.begin(9600);
   pinMode(right_sens, INPUT);
   pinMode(left_sens, INPUT);
-  attachInterrupt(digitalPinToInterrupt(right_sens), right_turn, RISING);
-  attachInterrupt(digitalPinToInterrupt(left_sens), left_turn, RISING);
   
   pinMode(motorPin1, OUTPUT);
   pinMode(motorPin2, OUTPUT);
@@ -53,27 +51,42 @@ void loop(){
   USC_Sensor();
   USR_Sensor();
   USL_Sensor();
-  if((digitalRead(right_sens) == LOW)&&(digitalRead(left_sens) == LOW)){
+  
+  if((digitalRead(right_sens) == LOW)&&(digitalRead(left_sens) == LOW)){//forward
 
     analogWrite(motorPin2, 191);
     analogWrite(motorPin4, 191);
-    digitalWrite(motorPin2, HIGH);
-    digitalWrite(motorPin4, HIGH);
     //Serial.println("am working, yay");
     //delay(500);
   }
 
-  if((digitalRead(right_sens) == HIGH)&&(digitalRead(left_sens) == HIGH)){
+  if((digitalRead(right_sens) == LOW)&&(digitalRead(left_sens) == HIGH)){
     
-    digitalWrite(motorPin2, LOW);
-    digitalWrite(motorPin4, LOW);
+    analogWrite(motorPin2, 255);
+    analogWrite(motorPin4, 64);
     //Serial.println("Stuffs broken, abort");
     //delay(500);
   }
-  else if((distanceC <= 30) || (distanceR <= 30) || (distanceL <= 30)){
+
+  if((digitalRead(right_sens) == HIGH)&&(digitalRead(left_sens) == LOW)){
     
-   digitalWrite(motorPin2, LOW);
-   digitalWrite(motorPin4, LOW);
+    analogWrite(motorPin2, 64);
+    analogWrite(motorPin4, 255);
+    //Serial.println("Stuffs broken, abort");
+    //delay(500);
+  }
+
+  if((digitalRead(right_sens) == HIGH)&&(digitalRead(left_sens) == HIGH)){//stop
+    
+    analogWrite(motorPin2, 0);
+    analogWrite(motorPin4, 0);
+    //Serial.println("Stuffs broken, abort");
+    //delay(500);
+  }
+  else if((distanceC <= 30) || (distanceR <= 30) || (distanceL <= 30)){//obstacles
+    
+   analogWrite(motorPin2, 0);
+   analogWrite(motorPin4, 0);
     if(distanceR < distanceL){
       right_sens_override = 1;
       Avoid_On_Right();
@@ -87,75 +100,45 @@ void loop(){
 }
 
 void Avoid_On_Right(){
-  
-while(right_sens_override == 1){  
-  analogWrite(motorPin2, 64);
-  analogWrite(motorPin3, 64);
-  digitalWrite(motorPin2, HIGH);
-  digitalWrite(motorPin4, LOW);
-  delay(300);
-  
-  digitalWrite(motorPin2, LOW);
-  digitalWrite(motorPin3, LOW);
-  delayMicroseconds(10);
-  
+   USR_Sensor();
+   analogWrite(motorPin2, 64);
+   delay(1000);
+   analogWrite(motorPin2, 0);
+
+while(right_sens_override > 0){
+   USR_Sensor();
   if(distanceR < 50){
-    digitalWrite(motorPin2, LOW);
-    digitalWrite(motorPin4, LOW);
-    digitalWrite(motorPin3, HIGH);
+    analogWrite(motorPin2, 64);
+    analogWrite(motorPin4, 0);
   }else{
     analogWrite(motorPin2, 32);
     analogWrite(motorPin4, 64);
-    digitalWrite(motorPin2, HIGH);
-    digitalWrite(motorPin4, HIGH);
+  }if(digitalRead(left_sens) == HIGH){
+    right_sens_override = 0;
   }
 }
 }
 
 void Avoid_On_Left(){
   
-while(left_sens_override == 1){
-  analogWrite(motorPin1, 64);
+  USL_Sensor();
   analogWrite(motorPin4, 64);
-  digitalWrite(motorPin4, HIGH);
-  digitalWrite(motorPin2, LOW);
-  delay(300);
+  delay(1000);
+  analogWrite(motorPin4, 0);
   
-  digitalWrite(motorPin1, LOW);
-  digitalWrite(motorPin4, LOW);
-  delayMicroseconds(10);
-  
-  if(distanceR < 50){
-    digitalWrite(motorPin4, LOW);
-    digitalWrite(motorPin2, LOW);
-    digitalWrite(motorPin1, HIGH);
+while(left_sens_override > 0){
+  USL_Sensor();
+  if(distanceL < 50){
+    analogWrite(motorPin4, 64);
+    analogWrite(motorPin2, 0);
   }else{
     analogWrite(motorPin2, 64);
     analogWrite(motorPin4, 32);
-    digitalWrite(motorPin2, HIGH);
-    digitalWrite(motorPin4, HIGH);
   }
-}
-}
-
-void right_turn(){
-  if(right_sens_override == 0){
-    analogWrite(motorPin2, 64);
-    analogWrite(motorPin4, 255);
+  if(digitalRead(right_sens) == HIGH){
     left_sens_override = 0;
-    
-  }else{
   }
 }
-
-void left_turn(){
-  if(left_sens_override == 0){
-    analogWrite(motorPin2, 255);
-    analogWrite(motorPin4, 64);
-    right_sens_override = 0;
-    
-  }else{
-  }
 }
 
 void USC_Sensor(){
