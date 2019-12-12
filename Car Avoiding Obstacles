@@ -101,18 +101,18 @@ void loop(){
 
 void Avoid_On_Right(){
    USR_Sensor();
-   analogWrite(motorPin2, 64);
+   analogWrite(motorPin2, 127);
    delay(1000);
    analogWrite(motorPin2, 0);
 
 while(right_sens_override > 0){
    USR_Sensor();
   if(distanceR < 50){
-    analogWrite(motorPin2, 64);
+    analogWrite(motorPin2, 127);
     analogWrite(motorPin4, 0);
   }else{
-    analogWrite(motorPin2, 32);
-    analogWrite(motorPin4, 64);
+    analogWrite(motorPin2, 64);
+    analogWrite(motorPin4, 127);
   }if(digitalRead(left_sens) == HIGH){
     right_sens_override = 0;
   }
@@ -122,18 +122,18 @@ while(right_sens_override > 0){
 void Avoid_On_Left(){
   
   USL_Sensor();
-  analogWrite(motorPin4, 64);
+  analogWrite(motorPin4, 127);
   delay(1000);
   analogWrite(motorPin4, 0);
   
 while(left_sens_override > 0){
   USL_Sensor();
   if(distanceL < 50){
-    analogWrite(motorPin4, 64);
+    analogWrite(motorPin4, 127);
     analogWrite(motorPin2, 0);
   }else{
-    analogWrite(motorPin2, 64);
-    analogWrite(motorPin4, 32);
+    analogWrite(motorPin2, 127);
+    analogWrite(motorPin4, 64);
   }
   if(digitalRead(right_sens) == HIGH){
     left_sens_override = 0;
