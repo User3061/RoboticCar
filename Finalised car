@@ -102,7 +102,7 @@ void loop(){
 void Avoid_On_Right(){
    USR_Sensor();
    analogWrite(motorPin2, 127);
-   delay(1000);
+   delay(1500);
    analogWrite(motorPin2, 0);
 
 while(right_sens_override > 0){
@@ -123,7 +123,7 @@ void Avoid_On_Left(){
   
   USL_Sensor();
   analogWrite(motorPin4, 127);
-  delay(1000);
+  delay(1500);
   analogWrite(motorPin4, 0);
   
 while(left_sens_override > 0){
