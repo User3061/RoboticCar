@@ -55,9 +55,6 @@ void right_turn(){
   }
 
 void left_turn(){
-
   analogWrite(motorPin2, 255);
   analogWrite(motorPin4, 64);
-  //Serial.println("turning left");
-  
   }
