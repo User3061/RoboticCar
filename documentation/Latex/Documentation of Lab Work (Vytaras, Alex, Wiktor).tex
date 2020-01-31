@@ -93,7 +93,7 @@ As stated before the car streaming is realized on a RaspberryPi 3. The hardware 
 	\label{fig:RPi}
 \end{figure}
 The Raspberry Pi features a 64-bit Broadcast System on a chip (SoC) with an integrated ARM-compatible central processing unit (CPU) and on chip graphic processing unit (GPU). The Processor Speed is 1.4 GHz and an on-board memory of 512 MB SDRAM. It also features a Bluetooth and Wifi functionality used for the TCP stream. The Rpi has a 5V/2.5A DC power input which is connected to a power bank. The Extended 40-pin GPIO header was not used but could be useful in further modifactions. The streaming aspect was realized with the CSI camera port and the Camera Module v2. The Full Size HDMI Port is used to connect to a PC monitor to change parameters or the code. It could also be used to stream videos/images  directly on a smaller display directlly mounted on the car. 
-\subsection{Camera Module}
+\subsection{Camera module}
 The focus of a autonomous car/selfdriving vehicle is to process information and react fast. To get to this point, the engineering aspect requires optimezed hardware and software components. We used the powerful Microcomputer RaspberryPi and the official RaspberryPi camera module v2. 
 \begin{figure}[h!]
 	\includegraphics[width=\linewidth]{CameraModule.png}
@@ -214,6 +214,9 @@ One of the last steps of the loop is the byte stream conversion to the matrix co
 \newline
 And the last part of the loop is opening up an already prepared frame with a function "imshow", after a single frame is shown, it has to close after some time, so we have to implement a function "waitKey", which waits for a specified time in miliseconds or completely terminates the program if any key on the keyboard was pressed. If "waitKey" wouldnt be implemented, more and more frames would stack on each other, taking up all the recourses of the device, so this function is necessary.
 
+\section{Evaluation}
+\subsection{Camera stream integration}
+Even though big portions of the program were outsourced from different implementations and slightly modified to fit our needs and requirements, the results software wise were astonishing. The longer we spent trying to figure out what were missing and what we already have in our code, the more offten we came back to the UML diagrams, the more we started to understand our requirements, what we need to do to achieve them, and how different parts work, when going more into depth of implementation and design. Unfortunately, majority of functions used were parts of different libraries, which we did not thrive to understand, because of time pressure. Never the less, we are still curious and will continue being interested in the topics, which this project covered. It feels like we are just barely starting to understand the possibility of developing and engineering.
 
 
 
