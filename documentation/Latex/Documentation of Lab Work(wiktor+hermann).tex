@@ -1,0 +1,165 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+
+\title{Documentation of Lab work for group 8\\
+}
+
+\makeatletter
+\newcommand{\linebreakand}{%
+  \end{@IEEEauthorhalign}
+  \hfill\mbox{}\par
+  \mbox{}\hfill\begin{@IEEEauthorhalign}
+}
+\makeatother
+
+\author{\IEEEauthorblockN{Wiktor Kochanek}
+\IEEEauthorblockA{\textit{Electronic Engineering} \\
+\textit{Hochschule Hamm-Lippstadt}\\
+Lippstadt, Germany \\
+wiktor.kochanek@stud.hshl.de}
+\and
+\IEEEauthorblockN{Vytaras Juraska}
+\IEEEauthorblockA{\textit{Electronic Engineering} \\
+\textit{Hochschule Hamm-Lippstadt}\\
+Lippstadt, Germany \\
+vytaras.juraska@stud.hshl.de}
+\linebreakand
+\IEEEauthorblockN{Hermann Anguiga}
+\IEEEauthorblockA{\textit{Electronic Engineering} \\
+\textit{Hochschule Hamm-Lippstadt}\\
+Lippstadt, Germany \\
+hermann.anguiga@stud.hshl.de}
+\and
+\IEEEauthorblockN{Alex Wilms}
+\IEEEauthorblockA{\textit{Electronic Engineering} \\
+\textit{Hochschule Hamm-Lippstadt}\\
+Lippstadt, Germany \\
+alex.wilms@stud.hshl.de}}
+
+\maketitle
+
+\begin{abstract}
+This document is a record of our group first forray into the world of autonomous driving.
+\end{abstract}
+
+\section{Introduction}
+Motivated by a class assignement our group was tasked with creating a self-driving vehicle.
+We achieved this by using line tracking sensors and ultrasonic sensors, but also attempted to implement a camera
+and video streaming as the next step.
+
+\section{Analyzing the specifications}
+
+Our assignment came with clearly defined specifications:
+\begin{itemize}
+\item Line tracking system
+\item Ultrasonic sensor integration
+\item Camera streaming system
+\end{itemize}
+We split these objectives into two sections: car focused - line tracking and ultrasonic sensors systems - and camera focused - the streaming.
+We then split the tasks inside our group so that each member can focus on a specific objective to bring the best possible results.
+
+
+\subsection{Car focused specifications}
+\subsubsection{Line tracking system}
+The car was supposed to be able to follow a line around a track using two line tracking sensors. The specific implementation of such function was left to our own choice.
+We decided to make a system that would allow the car to drive when it doesnt detect a line and react when it does detect a line.
+
+\subsubsection{Ultrasonic sensors system}
+The car was supposed to integrate a system using three ultrasonic sensors - what said system would influence was left to us to decide.
+we settled on an obstacle avoiding system that would co-operate with the line tracking system - if there was an obstacle on the track the car
+would attempt to drive around the obstacle and drive back onto the track.
+
+\subsection{Camera focused specification}
+The car was supposed to integrate a camera and a system that would allow it to stream the camera view onto an external computer.
+for this task we used a Raspberri Pi with a camera module and a Mac computer.
+
+\section{Architecture}
+\subsection{Line tracking sensors}
+The infrared (IR) sensor used for this project is mainly made of a transmitting IR-LED, a receiving photodiode, an adjustable resistor, a hole for fixation and connecting pins. This IR sensor works by detecting reflected light from its own LED. By measuring the amount of reflected infrared light, it can detect transitions from bright to dark objects.
+\begin{figure}[h!]
+	\includegraphics[width=\linewidth]{LineTrackingSensors.png}
+	\caption{Demonstration of how line tracking sensor works}
+	\label{fig:UMLSM1}
+\end{figure}
+When the sensor receives an appropriate voltage, the IR-LED emits infrared light. That light travels from the car to the surface on which it stands. If the surface is dark, the emitted light is absorbed, then there is no reflection. The photodiode diode senses nothing. There is no signal out of the sensor. If the surface is transparent the situation stays the same as previously mentioned excerpt here light passes through the surface. Finally, if the surface is reflective, the emitted light bounces back and is detected by the photodiode. A signal is generated and transmitted to another component of the circuit, in the present case: a microcontroller.  
+We would like to emphasis that to create a sensible detection, IR LED should be used with a low value resistor so that it shines brighter. Also, the nature, color and reflective proprieties of the surface play significant roles on the quality of the detection. 
+
+\subsection{Ultrasonic sensors}
+To avoid crashing into a structure, the car is equipped with an obstacle detection system made of three ultrasonic sensors that are positioned at the front part of the car. One sensor is located at the center and the others two on the sides.
+
+For this project, we made use of a particular ultrasonic sensor named HC-SR04. The HC-SR04 has two main components: A transmitter and a receiver. It has also four pins for connections. Namely VCC, Trig Echo and GND.
+
+During its operation, the HC-SR04 is most accurate when the object to be detected is directly in front of it. Object within 15 degree left and right get also a reasonable detection.  Outside this 30 degree range, it doesn't function.
+
+The short version of the operating mode of The HC-SR04 is as followed: 
+When a certain voltage is applied to the trigger pin, the sensor transmits a burst of eight pulses. While these pulses are travelling in airway, the Echo pin goes high and forms an echo-back signal.
+If the transmitted pulse is not reflected back, within a certain amount of time, the echo-back signal timeout and fades out. An internal signal is then produced to indicate there is no obstruction within the range of the sensor. 
+But if the pulse is reflected back, an internal signal is produced at the echo pin (Fig. 3.). 
+\begin{figure}[h!]
+	\includegraphics[width=\linewidth]{USSin.jpg}
+	\caption{Demonstration of how the ultrasonic sensor works}
+	\label{fig:UMLSM1}
+\end{figure}
+
+This sensor cannot actually tell distance - it can only measure the time it took for the pulses to come back to the sensor - as such, the calculation of distance needs to be done in the code.
+We take the time the sensor gives is in microseconds and convert it to distance using this formula:
+\begin{equation}
+	s=t*0.034/2
+\end{equation}
+Where t is the time for the wave to travel and s is the calculated distance. The time is divided by 2 as the wave needs to travel the distance twice - out and then back.
+
+\subsection{Motors}
+A DC motor is a machine that transforms electrical energy into mechanical energy in form of rotation. Its physical outside appearance consists of a shaft a body and connecting terminals. 
+When a voltage is applied to a motor it runs. If the polarity is inverted, the motor changes its direction. Finally, if the motor is running and both terminals are disconnected, it will keep rotating but will certainly slow down and stop. Knowing these conditions has eventually dictated our thinking on how to control this car.
+From the code point of view motors are very simple to use. We attach a PWM value to them using a digitalWrite() function to determine the \text{\%} of power they should run at.
+
+
+
+
+\section{System design}
+The car will operate within 4 states for line tracking system and a pseudostate for the ultrasonic sensors sytem. Different enviromental inputs will influence the behaviour of the car.
+\begin{figure}[h!]
+	\includegraphics[width=\linewidth]{UMLStateDiagram.png}
+	\caption{UML State Diagram}
+	\label{fig:UMLSM1}
+\end{figure}
+
+The car will always begin in the line tracking state attempting to go forward. When one of the line tracking sensors detects that it has gone onto the line it will steer the car to get the sensor back off the line - Turn Right and Turn Left states. If it happens that both sensors are on the line at the same time the car will stop. Should the cars ultrasonic sensors detect an obstacle it will enter into the Avoiding Obstacles Pseudostate. It will then decide if the obstacle is closer to its right or left side and will attempt to avoid the obstacle on the other side. When it succesfully returns to the track the line tracking sensors will exit the car from the pseudostate and will reutrn line tracking functionality.
+
+\section{Implementation of the system}
+\subsection{Line tracking system}
+The line tracking system was the first thing tackled in the car functionality. The first implementation was a simple use of "if" and "if else" functions - depending on which line tracking sensor was tirggered, speeds of motors would change to make the car drive forward, turn the correct way or stop completely. Later implementation made use of interrupts, which changed the motor speed in the interrupt service routine.
+\begin{figure}[h!]
+	\includegraphics[width=\linewidth]{examplecode1.png}
+	\caption{used interrupt service routine$^{1}$}
+	\label{fig:EXC1}
+\end{figure}
+\footnote{lines of code in Fig. 2 do not represent actual content in the final source code}
+While the interrupt solution was a great way to make the source code easy to understand and and the car ran very smoothly, it was scrapped during integration with ultrasonic sensor code as there were compatiblity problem. As such we settled on a "if" and "if else" functions solution.
+\subsection{Obstacle avoidance system}
+Implementation of the ultrasonic sensors was not specifically defined in the project requriements. Our design used them in a way to detect and obstacle in the way and attempt to drive around it. First the car had to know that there was an obstacle in front of it. This was achieved simply using an "if" function - if any of the three sensors detect an obstacle within 30cm of the car they will trigger the if condition and enter the car in the pseudostate of "avoid obstacle".
+\begin{figure}[h!]
+	\includegraphics[width=\linewidth]{examplecode2.png}
+	\caption{if condition detecting the obstacle}
+	\label{fig:EXC2}
+\end{figure}
+After the car enter this pseudostate we have to choose which way is best to avoid the obstacle on - meaning that if theres a wall on our right, we want to turn to the left to clear it and vice versa. This is simply done by comparing the distance values on the right and left ultrasonic sensors - distanceR and distanceL respecitvelly. In this case we don't care about the centre distance as it doesnt influence our choice of side to avoid on. After the choice is made the car enters a loop that lets it go around an obstacle - in this example we will be avoiding an obstacle on the right (distanceL $<$ distanceR).
+\begin{figure}[h!]
+	\includegraphics[width=\linewidth]{AvoidActivityDiagram.png}
+	\caption{Activity diagram of the avoiding algorithm}
+	\label{fig:AAD}
+\end{figure}
+After starting the avoiding algorithm the car will slowly arch around its obstacle. it is possible that the obstacle is longer than the arch diameter, so the car is able to detect obstacles in this mode and turn away again if needed.
+This algorithm was designed to allow the car to leave its line in order to avoid the obstacle and detect when it is supposed to once again follow said line. In order to do that we had to have the car ignore one of the line tracking sensors for the duration of avoiding algorithm - in this case the right line tracking sensor - and then respect the sensor again when it gets back on the line. This was simply done by running the algorithm in a subfunction and including a simple if condition in the loop. The car arching around the obstacle is implemented using a while loop that relies on a variable set after the car decides on which side is the obstacle. The only way to stop that while loop is the active line tracking sensor - in this case the left one - to cross onto the line. The sensor triggering ends the while loop and the avoidance algorithm returning the car to its line tracking functionality.
+
+\end{document}
