@@ -1,0 +1,104 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+
+\title{Documentation of Lab work for group 8\\
+}
+
+\makeatletter
+\newcommand{\linebreakand}{%
+  \end{@IEEEauthorhalign}
+  \hfill\mbox{}\par
+  \mbox{}\hfill\begin{@IEEEauthorhalign}
+}
+\makeatother
+
+\author{\IEEEauthorblockN{Wiktor Kochanek}
+\IEEEauthorblockA{\textit{Electronic Engineering} \\
+\textit{Hochschule Hamm-Lippstadt}\\
+Lippstadt, Germany \\
+wiktor.kochanek@stud.hshl.de}
+\and
+\IEEEauthorblockN{Vytaras Juraska}
+\IEEEauthorblockA{\textit{Electronic Engineering} \\
+\textit{Hochschule Hamm-Lippstadt}\\
+Lippstadt, Germany \\
+vytaras.juraska@gmail.com}
+\linebreakand
+\IEEEauthorblockN{Hermann}
+\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
+\textit{name of organization (of Aff.)}\\
+City, Country \\
+email address or ORCID}
+\and
+\IEEEauthorblockN{Alexander Wilms}
+\IEEEauthorblockA{\textit{Electronic Engineering} \\
+\textit{name of organization (of Aff.)}\\
+Lippstadt, Germany \\
+alexander.wilms@stud.hshl.de}}
+
+\maketitle
+
+\begin{abstract}
+This document is a record of our group activity and progress in a lab assignment - build an autonomous car.
+\end{abstract}
+
+\section{Introduction}
+Motivated by a class assignement our group was tasked with creating a self-driving vehicle.
+We achieved this by using line tracking sensors and ultrasonic sensors controlled by an Arduino and also implemented a video stream using Raspberry Pi and its external Raspberry Pi Camera V2.
+
+\section{Analyzing the specifications}
+
+Our assignment came with clearly defined specifications:
+\begin{itemize}
+\item Line tracking system
+\item Ultrasonic sensor integration
+\item Camera streaming system
+\end{itemize}
+We split these objectives into two sections: car focused - line tracking and ultrasonic sensors systems - and camera focused - the streaming.
+We then split the tasks inside our group so that each member can focus on a specific objective to bring the best possible results.
+
+
+\section{Car focused specifications}
+\subsection{Line tracking system}
+The car was supposed to be able to follow a line around a track using two line tracking sensors. The specific implementation of such function was left to our own choice.
+We decided to make a system that would allow the car to drive when it doesnt detect a line and react when it does detect a line.
+
+\subsection{Ultrasonic sensors system}
+The car was supposed to integrate a system using three ultrasonic sensors - what said system would influence was left to us to decide.
+we settled on an obstacle avoiding system that would co-operate with the line tracking system - if there was an obstacle on the track the car
+would attempt to drive around the obstacle and drive back onto the track.
+
+\section{Camera focused specification}
+The car was supposed to integrate a camera and a system, that would allow it to stream the video from the camera to an external device. The methods of implementation were left to us to decide.
+For this task we used a Raspberry Pi with a camera module as a client sending frames and a Mac computer as a server receiving frames and opening them in a format of a picture one by one. 
+\subsection{RaspberryPi}
+For this project in the case of the video streaming component, we used the versatile single-board-computer named RaspberryP Model 3. The RaspberryPi series in general is worldwide used and shows the practicality in many different use cases globally. One of the main points is that it is promoted to teach the basics of computer sciences in schools, universities and in developing countires. Most of our group members have heard or even worked with a RaspberryPi before, which is a plus. However it is simple to understand and the initial training is fast. As it is a linux based system the commands and functions are simliar to other linux systems. The flexibility of this mirocomputer makes it perfect for rapid protyping in genreral but also perfect for our creation of a self-driving vehicle because we are able to adapt and change parts in the future. The RaspberryPi is also used in the domain of informatics, robotics and electronic engineering but is also interesting for hobbyists who want build projects for themselves. The small price point of under 40 Euros makes it suitable for a lot of people getting in the field. This is a motivation for us to use it and see what the hardware is capable of with our knowledge and work. This way we can publish our code to GitHub and make it public, so other people and students can build their version of a self driving vehicle with a camera stream. It is commonly kown that many people are using and have used the RaspberryPi for surveilance systems, video recordings and streaming projects. We want to give it a try and see if the project is usable for car streaming scenario with a short delay.
+\newline
+As stated before the car streaming is realized on a RaspberryPi 3. The hardware parts, input/output possiblities and specs are quite remarbale for its size and price. The project definitely benefits from these parts but it has to be noted that the RPi Model 3 might be overpowered for our simple stream of 320x240 pixels. Nevertheless the power of the hardware could be usefull for future adaptations. The Raspberry Pi features a 64-bit Broadcast System on a chip (SoC) with an integrated ARM-compatible central processing unit (CPU) and on chip graphic processing unit (GPU). The Processor Speed is 1.4 GHz and an on-board memory of 512 MB SDRAM. It also features a Bluetooth and Wifi functionality used for the TCP stream. The Rpi has a 5V/2.5A DC power input which is connected to a power bank. The Extended 40-pin GPIO header was not used but could be use in further modifactions. The streaming aspect was realized with the CSI camera port and the Camera Module v2. The Full Size HDMI Port is used to connect to a PC monitor to change parameters or the code. It could also be used to stream videos/images  directly on a smaller display directlly mounted on the car. 
+\subsection{Camera}
+The focus of a autonomous car/selfdriving vehicle is to process information and react fast. To get to this point the engieering aspect require optimezed hardware and software components. We used the powerful Microcomputer RaspberryPi and the official RaspberryPi camera module v2. These components are connected via ribbon cable to the special CSI camera port for optimized compatability. The camera in it self is small and well constructed. It has a Sony IMX219 8-megapixel sensor. THe Module v2 can be used to used to take still images as well as high-defintion video. It supports  1080p 30fps, 720p 60fps and VGA 90 fps video modes. THe camera is easy to use but has many functions for more complicated tasks. There are lots of examples online on github and tutorial sites of people using it for time-lapse, slow-motion and other video effects. There is also the possibility use libraries and open source projects. 
+\newline
+The car requires a fast and reliable stream for the user and system. This is why we decided use lightweight protocols like TCP, Berkley Sockets and a small but suffiecient image size of 320x240 pixels. This way we reached a delau of <50ms. The image and streaming software proccesing part is described below. Before the camera system can be used there is a part of setting it up. The RaspberryPi has many suitable operating systems. We choose the official distribution 'Raspbian' because its the most supported and functional. After downloading the 'Raspian Stretch with Desktop' operating system .zip file, the image needs to be written on the SD card. We decided to use the program 'Balena Etcher' which worked fine. In order to use the camera module, it is required to enable the camera software. This can be done in the desktop enviroment. In the RaspberryPi configuration window under Prefernces menu in the interface tab is the option to 'enable Camera'. After these steps are completed and reboot is done, the RPi is ready to use for further steps.
+    
+
+\section{System Design}
+\subsection{Car focused System Design}
+The car will operate within 4 states for line tracking system and a pseudostate for the ultrasonic sensors sytem. Different enviromental inputs will influence the behaviour of the car.
+
+The car will always begin in the line tracking state attempting to go forward. When one of the line tracking sensors detects that it has gone onto the line it will steer the car to get the sensor back off the line - Turn Right and Turn Left states. If it happens that both sensors are on the line at the same time the car will stop. Should the cars ultrasonic sensors detect an obstacle it will enter into the Avoiding Obstacles Pseudostate. It will then decide if the obstacle is closer to its right or left side and will attempt to avoid the obstacle on the other side. When it succesfully returns to the track the line tracking sensors will exit the car from the pseudostate and will reutrn line tracking functionality.
+
+
+
+
+
+\end{document}
