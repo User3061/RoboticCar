@@ -59,7 +59,9 @@
 
       for (int i = 0; i < imgSize; i += bytes) {
         if ((bytes = recv(ConnectFD, sockData +i, imgSize  - i, 0)) == -1)  {
-          
+          perror("recieve failed");
+          close(SocketFD);
+          exit(EXIT_FAILURE);
         }
       }
 
